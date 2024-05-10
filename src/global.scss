@@ -1,0 +1,228 @@
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+//owl DATE and TIME
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+* {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+//spinner controller
+.ion-loading-class {
+  --background: #ffffff;
+  --spinner-color: #000000;
+}
+
+//alert controller
+//ion-alert-style-start
+ion-alert.custom-alert-style {
+  --backdrop-opacity: 0.1;
+  --min-width: 336px;
+  --width: auto;
+  --min-height: 100px;
+  --height: auto;
+  --max-height: 100%;
+
+  ion-backdrop {
+    cursor: auto;
+  }
+
+  .alert-wrapper.sc-ion-alert-md {
+    border-radius: 18px;
+    // background: #f6cff8;
+    background: var(--alert-bgcolor);
+  }
+
+  button.alert-button.alert-button-confirm {
+    background: linear-gradient(90deg, var(--ion-modal-header-bgcolor-right), var(--ion-modal-header-bgcolor-left));
+    color: var(--ion-modal-header-text-color);
+    padding: 10px 40px 10px 40px;
+    height: 36px;
+    text-transform: none;
+    border-radius: 3px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  button.alert-button.alert-button-cancel {
+    background: transparent;
+    color: var(--alert-title-text-color);
+    padding: 10px 40px 10px 40px;
+    height: 36px;
+    text-transform: none;
+    margin: 0;
+    font-weight: 400 !important;
+  }
+
+  .alert-title.sc-ion-alert-md {
+    color: var(--alert-title-text-color);
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .alert-sub-title.sc-ion-alert-md {
+    color: var(--alert-subtitle-text-color);
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    margin-top: 11px;
+  }
+}
+
+.custom-alert-style .alert-button-group {
+  padding: 5px;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.alert-button-inner.sc-ion-alert-md {
+  justify-content: center;
+  --font-weight: 400px !important;
+}
+
+.md button.alert-button.alert-button-cancel {
+  border-radius: 3px;
+  border: 0.5px solid #343a40;
+}
+
+.ios .custom-alert button.alert-button {
+  border: 0.55px solid rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.2);
+}
+
+.ios button.alert-button.alert-button-cancel {
+  border-right: 0;
+  border-bottom-left-radius: 13px;
+  border-top-left-radius: 13px;
+  width: 20px;
+}
+
+.txt-transform-none {
+  text-transform: none;
+}
+
+ion-checkbox {
+  --size: 32px;
+  --background-checked: var(--common-checkbox-color);
+  --checkmark-color: #fff;
+}
+
+ion-checkbox::part(container) {
+  border-radius: 6px;
+  border: 2px solid var(--common-checkbox-color);
+}
+
+.profit-color {
+  color: var(--primary-amount-profit) !important;
+}
+
+.loss-color {
+  color: var(--primary-amount-loss) !important;
+}
+
+.primary-profit-color {
+  color: var(--primary-amount-profit);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.primary-loss-color {
+  color: var(--primary-amount-loss);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.secondary-loss-color {
+  color: var(--secondary-amount-loss);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.secondary-profit-color {
+  color: var(--secondary-amount-profit);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.primary-success-button {
+  --background: linear-gradient(90deg, var(--primary-button-bgcolor-right), var(--primary-button-bgcolor-left)) !important;
+  // min-width: 80px;
+
+  ion-label {
+    color: var(--primary-button-text-color) !important;
+    text-transform: none;
+  }
+}
+
+.secondary-cancel-button {
+  --background: var(--secondary-button-bgcolor) !important;
+
+  ion-label {
+    color: var(--secondary-button-text-color) !important;
+    text-transform: none;
+  }
+}
+
+.delete-danger-button {
+  --background: var(--danger-button-bgcolor) !important;
+
+  ion-label {
+    color: var(--common-text-color-W) !important;
+    text-transform: none;
+  }
+}
+
+
+.setting-page-button {
+  --background: linear-gradient(90deg, var(--primary-button-bgcolor-right), var(--primary-button-bgcolor-left)) !important;
+  min-width: 80px;
+
+  ion-label {
+    color: var(--primary-button-text-color) !important;
+    text-transform: none;
+  }
+}
+
+ion-menu-button {
+  color: var(--common-text-color-W);
+}
+
+.custom-tooltip-wrapper {
+  width: 100%;
+  color: var(--common-text-color-B);
+  padding: 8px;
+  text-align: left;
+  background-color: var(--common-text-color-W);
+}
+
+.custom-tooltip {
+  color: var(--common-text-color-W);
+  padding: 14px;
+  font-size: 14px;
+}
+
+ion-spinner.profit-calculating {
+  width: 16px;
+  height: 16px;
+}

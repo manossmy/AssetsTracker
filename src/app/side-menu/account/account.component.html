@@ -1,0 +1,227 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="content-wrapper">
+      <ion-menu-button></ion-menu-button>
+      <ion-label><ion-icon name="home" class="ion-margin-end"
+          routerLink="/user/1/investment"></ion-icon>Account</ion-label>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-content-wrapper">
+    <div class="ion-segment-wrapper">
+      <ion-segment [(ngModel)]="activeTabName">
+        <ion-segment-button value="ACCOUNT">
+          <ion-label class="txt-transform-none">Account</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="FAMILY">
+          <ion-label class="txt-transform-none">Family</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+    <div class="users-wrapper" [ngSwitch]="activeTabName">
+      <div *ngSwitchCase="'ACCOUNT'">
+        <ion-card class="card-wrapper" *ngFor="let user of userList">
+          <ion-grid class="card-grid-wrapper">
+            <ion-row class="upper-content">
+              <ion-col size="10">
+                <ion-label class="name"> {{user.name}} </ion-label>
+                <ion-icon [name]="ionicService.maskAmount ? 'eye' : 'eye-off'" (click)="ionicService.maskAmount = !ionicService.maskAmount"></ion-icon>
+              </ion-col>
+              <ion-col size="2" class="ion-no-padding">
+                <ion-button class="ion-float-right ion-no-margin primary-success-button" (click)="viewUserData(user.id)"
+                  routerDirection="back">
+                  <ion-label>View</ion-label>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+            <!--  -->
+            <ion-row class="middle-content">
+              <ion-col>
+                <ion-row style="display: {{user['hide_' + field.attr] == true ? 'none': ''}}" class="row-align-fix"
+                  *ngFor="let field of userFieldList">
+                  <ion-col>
+                    <ion-label class="txt">{{field.name}}</ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="ion-float-right value">
+                      {{ field.type == 'TEXT' ? user[field.attr] : '' }}
+                      {{ field.type == 'DATE' ? (user[field.attr] | date: 'dd-MMM-y') : '' }}
+                      {{ field.type == 'AMOUNT' ? '₹ ' + (user[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount) : '' }}
+                      {{ field.type == 'PERCENTAGE' ? (user[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount) + ' %' : ''
+                      }}
+                    </ion-label>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            <!--  -->
+            <ion-row class="lower-content">
+              <ion-col>
+                <ion-button class="ion-no-margin primary-success-button" [disabled]="user.isDefault == 1"
+                  (click)="makeDefaultUser(user.id)">
+                  <ion-label>Default</ion-label>
+                </ion-button>
+              </ion-col>
+              <ion-col class="view-btn">
+                <ion-button class="ion-no-margin delete-danger-button" [disabled]="user.isDefault == 1"
+                  (click)="confirmDelete(user.id, true)">
+                  <ion-label>Delete</ion-label>
+                </ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button class="ion-float-right ion-no-margin primary-success-button" (click)="openUserModel(user)">
+                  <ion-label>Edit</ion-label>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </div>
+      <div *ngSwitchCase="'FAMILY'">
+        <ion-card class="card-wrapper" *ngFor="let family of familyList">
+          <ion-grid class="card-grid-wrapper">
+            <ion-row class="upper-content">
+              <ion-col size="10">
+                <ion-label class="name"> {{family.name}} </ion-label>
+                <ion-icon [name]="ionicService.maskAmount ? 'eye' : 'eye-off'" (click)="ionicService.maskAmount = !ionicService.maskAmount"></ion-icon>
+              </ion-col>
+              <ion-col size="2" class="ion-no-padding">
+                <ion-icon name="create-sharp" class="ion-float-right" (click)="openFamilyModel(family)"></ion-icon>
+              </ion-col>
+            </ion-row>
+            <!--  -->
+            <ion-row class="middle-content">
+              <ion-col>
+                <ion-row class="row-align-fix" style="display: {{family['hide_' + field.attr] == true ? 'none': ''}}"
+                  *ngFor="let field of familyFieldList">
+                  <ion-col>
+                    <ion-label class="txt">{{field.name}}</ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="ion-float-right value">
+                      {{ field.type == 'TEXT' ? family[field.attr] : '' }}
+                      {{ field.type == 'DATE' ? (family[field.attr] | date: 'dd-MMM-y') : '' }}
+                      {{ field.type == 'AMOUNT' ? '₹ ' + (family[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount) : '' }}
+                      {{ field.type == 'PERCENTAGE' ? (family[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount) + ' %' : ''}}
+                    </ion-label>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            <!--  -->
+            <ion-row class="lower-content">
+              <ion-col>
+                <ion-button class="ion-float-right ion-no-margin delete-danger-button" (click)="confirmDelete(family.id, false)">
+                  <ion-label>Delete</ion-label>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+  <div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-title>
+      <ion-button expand="block" *ngIf="activeTabName == 'ACCOUNT'" (click)="openUserModel({})">
+        <ion-label>Add Account</ion-label>
+      </ion-button>
+      <ion-button expand="block" *ngIf="activeTabName == 'FAMILY'" (click)="openUserModel({})">
+        <ion-label>Add Family</ion-label>
+      </ion-button>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
+
+
+<ion-modal #addAccountOrFamilyModal [enterAnimation]="enterAnimation" [leaveAnimation]="leaveAnimation">
+  <ng-template>
+    <ion-header class="ion-no-border pop-up-modal-header">
+      <ion-toolbar>
+        <ion-title>
+          <ion-label>Create New Account</ion-label>
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="pop-up-modal-content">
+      <div style="margin-top: 0px">
+        <ion-card class="ion-margin-top">
+          <ion-grid>
+            <ion-row *ngIf="activeTabName == 'ACCOUNT'">
+              <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+                offset-md="4" offset-lg="4" offset-xl="4">
+                <ion-item fill="outline" class="ion-margin-bottom textbox">
+                  <ion-label position="floating">Name</ion-label>
+                  <ion-input type="text" name="name" [(ngModel)]="userDetails.name"></ion-input>
+                </ion-item>
+                <ion-item fill="outline" class="ion-margin-bottom textbox">
+                  <ion-label position="floating">Email</ion-label>
+                  <ion-input type="email" name="email" [(ngModel)]="userDetails.email"></ion-input>
+                </ion-item>
+                <ion-item fill="outline" class="ion-margin-bottom textbox">
+                  <ion-label position="floating">Phone Number</ion-label>
+                  <ion-input type="text" name="email" [(ngModel)]="userDetails.phone_number"></ion-input>
+                </ion-item>
+                <ion-item fill="outline" class="ion-margin-bottom textbox">
+                  <ion-label position="floating">PAN</ion-label>
+                  <ion-input type="text" name="pan" [(ngModel)]="userDetails.pan"></ion-input>
+                </ion-item>
+                <ion-item fill="outline" class="ion-margin-bottom textbox">
+                  <ion-select interface="popover" [(ngModel)]="userDetails.family_id" placeholder="-Select Family-"
+                    class="ion-no-padding">
+                    <ion-select-option *ngIf="familyList.length==0" disabled="true">No family found</ion-select-option>
+                    <ion-select-option *ngFor="let family of familyList"
+                      [value]="family.id">{{family.name}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="activeTabName == 'FAMILY'">
+              <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+                offset-md="4" offset-lg="4" offset-xl="4">
+                <ion-item fill="outline" class="ion-margin-bottom textbox">
+                  <ion-label position="floating">Name</ion-label>
+                  <ion-input type="text" name="name" [(ngModel)]="familyDetails.name"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+                offset-md="4" offset-lg="4" offset-xl="4">
+                <ion-buttons>
+                  <ion-button expand="block" (click)="cancelModalDismiss()" style="margin-right: 16px"
+                    class="secondary-cancel-button">
+                    <ion-label>Cancel</ion-label>
+                  </ion-button>
+                  <ion-button expand="block" *ngIf="activeTabName == 'ACCOUNT' && !userDetails.id"
+                    (click)="addAccount()" style="margin-left: 16px" class="primary-success-button">
+                    <ion-label>Add Account</ion-label>
+                  </ion-button>
+                  <ion-button expand="block" *ngIf="activeTabName == 'ACCOUNT' && userDetails.id"
+                    (click)="updateAccount()" style="margin-left: 16px" class="primary-success-button">
+                    <ion-label>Update Account</ion-label>
+                  </ion-button>
+                  <ion-button expand="block" *ngIf="activeTabName == 'FAMILY' && !familyDetails.id"
+                    (click)="addFamily()" style="margin-left: 16px" class="primary-success-button">
+                    <ion-label>Add Family</ion-label>
+                  </ion-button>
+                  <ion-button expand="block" *ngIf="activeTabName == 'FAMILY' && familyDetails.id"
+                    (click)="updateFamily()" style="margin-left: 16px" class="primary-success-button">
+                    <ion-label>Update Family</ion-label>
+                  </ion-button>
+                </ion-buttons>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

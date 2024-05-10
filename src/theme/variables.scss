@@ -1,0 +1,162 @@
+:root {
+
+  //HEADER PART
+
+  // if gradient required
+  --primary-section-bgcolor-left: #b050a7;
+  --primary-section-bgcolor-right: #cd4897;
+  // else
+  --primary-section-bgcolor: red;
+  // other part
+  --primary-bold-text-color: white;
+  --primary-normal-text-color: #d3d7d9;
+
+  --primary-amount-profit: rgb(0, 255, 0);
+  --primary-amount-loss: red;
+
+  // ------------------------------------------------ //
+
+  //BOTTOM - CONTENT PART
+  --secondary-section-bgcolor: #37454e;
+  --secondary-bold-text-color: white;
+  --secondary-normal-text-color: #d3d7d9;
+
+  --secondary-card-bg-color: #45525b;
+  --secondary-card-line-color: #5a6670;
+
+  --secondary-amount-profit: rgb(0, 255, 0);
+  --secondary-amount-loss: red;
+
+  // ------------------------------------------------ //
+
+  //FOOTER -CONTENT PART
+  --footer-section-bgcolor: #37454e;
+  --footer-button-bgcolor-left: #b050a7;
+  --footer-button-bgcolor-right: #cd4897;
+  --footer-button-text-color: white;
+
+  // ------------------------------------------------ //
+
+  //BUTTONS
+  --primary-button-bgcolor-left: #b050a7; //for gradient color
+  --primary-button-bgcolor-right: #cd4897; //for gradient color
+  --primary-button-text-color: white;
+
+  --secondary-button-bgcolor-left: #b050a7; //for gradient color
+  --secondary-button-bgcolor-right: #cd4897; //for gradient color
+  --secondary-button-text-color: black;
+
+  // else
+  --secondary-button-bgcolor: #b050a7;
+  --danger-button-bgcolor: red;
+
+  // ------------------------------------------------ //
+
+  //alert message
+  --alert-bgcolor: #f6cff8;
+  --alert-title-text-color: black;
+  --alert-subtitle-text-color: #3c3c3c;
+
+  //Modal
+  --ion-modal-popup-bgcolor: #000000;
+  --ion-modal-header-bgcolor-left: #b050a7;
+  --ion-modal-header-bgcolor-right: #cd4897;
+  --ion-modal-header-text-color: white;
+  --ion-modal-content-bgcolor: #37454e;
+  --ion-modal-content-textbox-bgcolor: #b050a7;
+
+
+  // ------------------------------------------------//
+
+  // Gendral colors
+  --amount-loss-red: #f83d44;
+  --amount-profit-green: #4eb04c;
+  --amount-nuteral-color: #c5f4ff;
+  --common-text-color-W: white;
+  --common-text-color-B: black;
+  --common-checkbox-color: #b050a7;
+}
+
+
+
+// ---------------------*******------------------------------------ 
+// :root {
+//   //HEADER PART
+//   // if gradient required
+//   --primary-section-bgcolor-left: #ff0e0e;
+//   --primary-section-bgcolor-right: rgb(86, 86, 86);
+//   // else
+//   --primary-section-bgcolor: red;
+//   // other part
+//   --primary-bold-text-color: white;
+//   --primary-normal-text-color: #d3d7d9;
+
+//   --primary-amount-profit: rgb(0, 255, 0);
+//   --primary-amount-loss: red;
+
+//   // ------------------------------------------------ //
+
+//   //BOTTOM - CONTENT PART
+//   --secondary-section-bgcolor: #9fa5fd;
+//   --secondary-bold-text-color: white;
+//   --secondary-normal-text-color: #d3d7d9;
+
+//   --secondary-card-bg-color: #000000;
+//   --secondary-card-line-color: #9fa5fd;
+
+//   --secondary-amount-profit: rgb(0, 255, 0);
+//   --secondary-amount-loss: red;
+
+//   // ------------------------------------------------ //
+
+//   //FOOTER -CONTENT PART
+//   --footer-section-bgcolor: #9fa5fd;
+//   --footer-button-bgcolor-left: yellow;
+//   --footer-button-bgcolor-right: red;
+//   --footer-button-text-color: black;
+
+//   // ------------------------------------------------ //
+
+//   //BUTTONS
+//   --primary-button-bgcolor-left: yellow; //for gradient color
+//   --primary-button-bgcolor-right: red; //for gradient color
+//   --primary-button-text-color: rgb(0, 0, 0);
+
+//   --secondary-button-bgcolor-left: #b050a7; //for gradient color
+//   --secondary-button-bgcolor-right: #cd4897; //for gradient color
+//   --secondary-button-text-color: black;
+
+//   // else
+//   --secondary-button-bgcolor: wheat;
+//   --secondary-button-text-color: black;
+
+//   --danger-button-bgcolor: red;
+
+//   // ------------------------------------------------ //
+
+//   //alert message
+//   --alert-bgcolor: #f9f9f9;
+//   --alert-title-text-color: black;
+//   --alert-subtitle-text-color: #3c3c3c;
+
+//   //Modal
+//   --ion-modal-popup-bgcolor: #000000;
+//   --ion-modal-header-bgcolor-left: #fdb1b1;
+//   --ion-modal-header-bgcolor-right: red;
+//   --ion-modal-header-text-color: white;
+//   --ion-modal-topheading-text-color: rgb(0, 0, 0);
+//   --ion-modal-content-bgcolor: #37454e;
+//   --ion-modal-content-textbox-bgcolor: wheat;
+
+
+//   // ------------------------------------------------//
+
+//   // Gendral colors
+//   --amount-loss-red: #f83d44;
+//   --amount-profit-green: #4eb04c;
+//   --amount-nuteral-color: #c5f4ff;
+//   --common-text-color-W: white;
+//   --common-text-color-B: black;
+//   --common-checkbox-color: red;
+
+// }

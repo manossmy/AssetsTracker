@@ -1,0 +1,7 @@
+{
+  "name": "My Assets",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

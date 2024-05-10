@@ -1,0 +1,50 @@
+.textbox {
+    --border-color: #d4d4d4;
+    --height: 42px;
+    --min-height: 42px;
+    font-style: normal;
+    color: var(--common-text-color-B); //before label font style
+    font-size: 14px;
+  
+    &.item-has-focus {
+      --highlight-color-valid: var(--common-text-color-B);
+      --show-full-highlight: 0.65;
+      --highlight-background: #d4d4d4;
+  
+      ion-label {
+        font-size: 14px;
+        color: var(--common-text-color-B);
+        transform: translateY(-10px) !important;
+      }
+    }
+  
+    &.item-has-value {
+      ion-label {
+        font-size: 14px;
+        color: var(--common-text-color-B);
+        transform: translateY(-10px) !important;
+      }
+  
+      .textbox.item-interactive-disabled {
+        --background: #d4d4d4;
+      }
+    }
+  
+    &.read-only {
+      --background: #f9f9f9;
+  
+      &::part(native) {
+        --border-color: #d4d4d4;
+      }
+    }
+  
+    ion-input {
+      --padding-top: 0px;
+      --padding-bottom: 0px;
+      transform: translateY(-10px);
+    }
+  
+    ion-label {
+      transform: translateY(12px);
+    }
+  }

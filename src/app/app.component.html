@@ -1,0 +1,35 @@
+<ion-app>
+  <ion-menu contentId="main-content" *ngIf="!isLoadingMenuData">
+    <ion-header>
+      <ion-toolbar>
+        <div class="side-menu-header">
+          <ion-avatar>
+            <ion-img src="../assets/icon/bg.jpg"></ion-img>
+          </ion-avatar>
+          <ion-title>Account</ion-title>
+        </div>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-menu-toggle (click)="ionMenuToggle()">
+        <ion-item *ngFor="let menu of menuList" [routerLink]="menu.link" routerDirection="back"
+          routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon [name]="menu.icon"></ion-icon>
+          <ion-label class="ion-margin-start">{{menu.name}}</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-title>
+          <ion-menu-toggle>
+            <ion-button expand="block" (click)="logoutConfirmation()">
+              <ion-label>Logout</ion-label>
+            </ion-button>
+          </ion-menu-toggle>
+        </ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-menu>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app>

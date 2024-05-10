@@ -1,0 +1,238 @@
+.ion-header {
+    height: 200px;
+    background: linear-gradient(90deg, var(--primary-section-bgcolor-left), var(--primary-section-bgcolor-right));
+
+    .header-content {
+        height: 62px;
+        display: flex;
+        align-items: center;
+        padding: 8px 14px 4px 14px;
+
+        ion-avatar {
+            height: 50px;
+            display: flex;
+            margin-right: 12px;
+            justify-content: center;
+
+            ion-img {
+                width: 50px;
+                height: 50px;
+                // cursor: pointer;
+                border: 2px solid var(--primary-bold-text-color);
+            }
+        }
+
+        ion-label {
+            flex: 1;
+            margin: 0px;
+            font-weight: 600;
+            color: var(--primary-bold-text-color);
+        }
+
+        .header-right-content {
+            ion-icon {
+                font-size: 28px;
+                padding-top: 4px;
+                cursor: pointer;
+                color: var(--primary-bold-text-color);
+            }
+        }
+    }
+
+    .price-content {
+        ion-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            ion-col {
+                text-align: center;
+
+                .total-asset-amount {
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: var(--primary-bold-text-color);
+                }
+
+                .total-txt {
+                    font-size: 12px;
+                    color: var(--primary-normal-text-color);
+                }
+
+                ion-icon {
+                    color: var(--primary-normal-text-color);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .split-amount-profit {
+        #vtcl-line {
+            border-right: 2px solid var(--primary-normal-text-color);
+        }
+
+        .split-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .amount {
+                font-weight: 600;
+                font-size: 14px;
+                color: var(--primary-bold-text-color);
+            }
+
+            .sub-text {
+                font-size: 12px;
+                color: var(--primary-normal-text-color);
+            }
+        }
+    }
+}
+
+.ion-content {
+    --background: var(--secondary-section-bgcolor);
+
+    .all-card-wrap {
+        ion-card {
+            background-color: var(--secondary-card-bg-color);
+
+            .row-align-fix {
+                margin: 4px 0px;
+
+                .fund-logos {
+                    height: 30px;
+                    width: 30px;
+                }
+            }
+
+            .card-upper-content {
+                .chart-bar-icon {
+                    font-size: 24px;
+                    color: var(--secondary-bold-text-color);
+                }
+
+                .mid-txt {
+                    align-items: center;
+                    justify-content: left;
+
+                    .investment-type-txt {
+                        height: 36px;
+                        overflow: hidden;
+                        padding-top: 5px;
+                        line-height: 16px;
+                    }
+
+                    .normal-txt {
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: var(--secondary-bold-text-color);
+                    }
+                }
+
+                .nxt-arrow-wrap {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .delete-icon {
+                    font-size: 24px;
+                    color: var(--secondary-bold-text-color);
+
+                }
+            }
+
+            .card-lower-content {
+                .col-2 {
+                    text-align: center;
+                }
+
+                .col-3 {
+                    text-align: end;
+                }
+
+                .title {
+                    font-size: 12px;
+                    color: var(--secondary-normal-text-color);
+                }
+
+                .value {
+                    font-size: 14px;
+                    color: var(--secondary-bold-text-color);
+                }
+            }
+        }
+    }
+}
+
+.ion-footer {
+    ion-toolbar {
+        --background: var(--footer-section-bgcolor);
+
+        ion-button {
+            margin: 0px;
+            --box-shadow: none;
+            text-transform: none;
+            --background: linear-gradient(90deg, var(--footer-button-bgcolor-right), var(--footer-button-bgcolor-left));
+            --color: var(--footer-button-text-color);
+
+            ion-label {
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+// popup modal
+.pop-up-modal-header {
+    .header-toolbar {
+        --background: linear-gradient(90deg, var(--ion-modal-header-bgcolor-left), var(--ion-modal-header-bgcolor-right));
+
+        ion-label {
+            font-size: 16px;
+            color: var(--ion-modal-topheading-text-color);
+        }
+
+        ion-icon {
+            font-size: 22px;
+            color: var(--ion-modal-header-text-color);
+        }
+    }
+}
+
+ion-modal {
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+    background: var(--ion-modal-popup-bgcolor);
+    opacity: 1;
+}
+
+.pop-up-modal-content {
+    --background: var(--ion-modal-content-bgcolor);
+
+    .modal-dropdown,
+    .modal-txtbx {
+        --background: var(--ion-modal-content-textbox-bgcolor);
+        --highlight-background: transparent;
+
+        ion-label {
+            --color: var(--ion-modal-header-text-color);
+        }
+    }
+}
+
+.pop-up-modal-btns {
+    ion-buttons {
+        display: flex;
+
+        ion-button {
+            flex: 1;
+            --box-shadow: none;
+        }
+    }
+}

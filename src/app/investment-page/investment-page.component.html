@@ -1,0 +1,188 @@
+<ion-header class="ion-header ion-no-border">
+  <div class="header-content" id="main-content">
+    <ion-menu-button></ion-menu-button>
+    <ion-avatar>
+        <ion-img src="../../assets/icon/bg.jpg"></ion-img>
+    </ion-avatar>
+    <ion-label class="ion-margin-start">{{userDetails.name}}</ion-label>
+    <div class="header-right-content" (click)="confirmLogout()">
+      <ion-icon name="log-out-outline"></ion-icon>
+    </div>
+  </div>
+
+  <div class="price-content ion-margin-bottom">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" class="ion-no-padding">
+          <ion-label class="total-asset-amount">₹ {{ userDetails.current_value | currencyFormat: '.0-0' || '00' | maskAmount: ionicService.maskAmount }}
+          </ion-label>
+          <ion-icon [name]="ionicService.maskAmount ? 'eye' : 'eye-off'" (click)="ionicService.maskAmount = !ionicService.maskAmount"></ion-icon>
+          <ion-spinner class="profit-calculating" *ngIf="profitService.isCalculationInProgress" name="crescent" color="light"></ion-spinner>
+        </ion-col>
+        <ion-col size="12" class="ion-no-padding">
+          <ion-label class="total-txt">Total Portfolio Value</ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="split-amount-profit">
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="6" class="ion-no-padding split-column" id="vtcl-line">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="sub-text">Invested</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="amount">₹ {{ userDetails.investment | currencyFormat: '.0-0' || '0,00' | maskAmount: ionicService.maskAmount }} </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="6" class="ion-no-padding split-column">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="sub-text">Profit (XIRR)</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="prof-loss">
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label
+                [ngClass]="(userDetails.current_value - userDetails.investment) > 0 ? 'primary-profit-color' : 'primary-loss-color'">₹
+                {{ (userDetails.current_value - userDetails.investment | currencyFormat: '.0-0') ||
+                '0,00' | maskAmount: ionicService.maskAmount }} ({{
+                userDetails?.xirr + '%' || '00' | maskAmount: ionicService.maskAmount }})</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-header>
+
+<ion-content class="ion-content">
+  <div class="all-card-wrap" *ngFor="let investment of investmentList">
+    <ion-card>
+      <ion-grid>
+        <ion-row class="card-upper-content" style="border-bottom: 2px solid var(--secondary-card-line-color)">
+          <ion-col class="ion-no-padding">
+            <ion-row class="row-align-fix">
+              <ion-col size="1">
+                <ion-icon name="bar-chart-sharp" *ngIf="!investmentLogos[investment.type]" class="ion-margin-end chart-bar-icon"></ion-icon>
+                <ion-img class="fund-logos" [src]="investmentLogos[investment.type]" *ngIf="investmentLogos[investment.type]"></ion-img>
+              </ion-col>
+              <ion-col size="10" style="display: flex" class="mid-txt ion-padding-start">
+                <div class="investment-type-txt" style="display: flex;">
+                  <ion-label class="normal-txt"
+                    [routerLink]="['/user/'+ userId +'/investment/'+ investment.id +'/sub-type']"> {{ investment.name }}
+                  </ion-label>
+                </div>
+              </ion-col>
+              <ion-col size="1" class="nxt-arrow-wrap delete-icon">
+                <ion-icon name="trash-sharp" (click)="confirmDelete(investment)"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row class="card-lower-content">
+          <ion-col class="ion-no-padding">
+            <ion-row style="display: {{investment['hide_' + field.attr] == true ? 'none': ''}}" class="row-align-fix"
+              *ngFor="let field of fieldDetails[investment.type]">
+              <ion-col *ngIf="investment['hide_' + field.attr] != true">
+                <ion-label class="title">{{field.name}}</ion-label>
+              </ion-col>
+              <ion-col *ngIf="investment['hide_' + field.attr] != true">
+                <ion-label class="ion-float-right value"
+                  [ngClass]="investment['css_' + field.attr] ? investment['css_' + field.attr] : ''">
+                  {{ field.type == 'TEXT' ? investment[field.attr] : '' }}
+                  {{ field.type == 'DATE' ? (investment[field.attr] | date: 'dd-MMM-y') : '' }}
+                  {{ field.type == 'AMOUNT' ? '₹ ' + (investment[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount) :
+                  '' }}
+                  {{ field.type == 'PERCENTAGE' ? (investment[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount) + '
+                  %' : ''
+                  }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-footer">
+  <ion-toolbar>
+    <ion-title>
+      <ion-button expand="block" id="open-investment-modal">
+        <ion-label>Add Investment</ion-label>
+      </ion-button>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- ion-modal -->
+<ion-modal #modal trigger="open-investment-modal" [enterAnimation]="enterAnimation" [leaveAnimation]="leaveAnimation">
+  <ng-template>
+    <ion-header class="pop-up-modal-header">
+      <ion-toolbar class="header-toolbar">
+        <ion-title>
+          <ion-label>Investment Type</ion-label>
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="pop-up-modal-content">
+      <div class="ion-margin-horizontal">
+        <div class="ion-margin-top">
+          <ion-label style="color: var(--ion-modal-header-text-color)">Investment Type</ion-label>
+          <ion-item fill="outline" class="ion-margin-vertical modal-dropdown">
+            <ion-select interface="action-sheet" placeholder="--Select Type--" [(ngModel)]="investment.type">
+              <ion-select-option *ngFor="let investmenttype of getPossibleInvestment()" [value]="investmenttype.type">
+                {{investmenttype.name}} </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <div *ngIf="investment.type == 'OTHERS'">
+          <ion-label style="color: var(--ion-modal-header-text-color)">Name</ion-label>
+          <ion-item fill="outline" class="ion-margin-vertical modal-txtbx">
+            <ion-input type="text" placeholder="Enter a Name" [(ngModel)]="investment.name"></ion-input>
+          </ion-item>
+        </div>
+        <div *ngIf="investment.type == 'NPS'">
+          <ion-label style="color: var(--ion-modal-header-text-color)">Pension Fund Manager (PFM)</ion-label>
+          <ion-item fill="outline" class="ion-margin-vertical modal-txtbx">
+            <ion-select interface="action-sheet" placeholder="--Select Type--" [(ngModel)]="investment.ref">
+              <ion-select-option *ngFor="let nps of npsTypes" [value]="nps.type">
+                {{nps.name}} </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <div *ngIf="investment.type == 'PPF'">
+          <ion-label style="color: var(--ion-modal-header-text-color)">Account Holder</ion-label>
+          <ion-item fill="outline" class="ion-margin-vertical modal-txtbx">
+            <ion-input type="text" [(ngModel)]="investment.account_holder"></ion-input>
+          </ion-item>
+        </div>
+        <div *ngIf="investment.type == 'PPF'">
+          <ion-label style="color: var(--ion-modal-header-text-color)">Start Date</ion-label>
+          <ion-item fill="outline" class="ion-margin-vertical modal-txtbx">
+            <ion-input type="date" name="start_date" [(ngModel)]="investment.start_date"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+
+      <div class="pop-up-modal-btns">
+        <ion-buttons class="ion-margin-horizontal">
+          <ion-button (click)="modal.dismiss()" style="margin-right: 16px" class="secondary-cancel-button">
+            <ion-label>Cancel</ion-label>
+          </ion-button>
+          <ion-button (click)="addInvestmentType()" style="margin-left: 16px" class="primary-success-button">
+            <ion-label>Add Investment</ion-label>
+          </ion-button>
+        </ion-buttons>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

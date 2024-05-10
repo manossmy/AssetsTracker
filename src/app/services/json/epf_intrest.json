@@ -1,0 +1,62 @@
+[
+    {
+        "start_date": "04-01-2005",
+        "end_date": "03-31-2010",
+        "intrest": 8.5
+    },
+    {
+        "start_date": "04-01-2010",
+        "end_date": "03-31-2011",
+        "intrest": 9.5
+    },
+    {
+        "start_date": "04-01-2011",
+        "end_date": "03-31-2012",
+        "intrest": 8.25
+    },
+    {
+        "start_date": "04-01-2012",
+        "end_date": "03-31-2013",
+        "intrest": 8.5
+    },
+    {
+        "start_date": "04-01-2013",
+        "end_date": "03-31-2015",
+        "intrest": 8.75
+    },
+    {
+        "start_date": "04-01-2015",
+        "end_date": "03-31-2016",
+        "intrest": 8.8
+    },
+    {
+        "start_date": "04-01-2016",
+        "end_date": "03-31-2017",
+        "intrest": 8.65
+    },
+    {
+        "start_date": "04-01-2017",
+        "end_date": "03-31-2018",
+        "intrest": 8.55
+    },
+    {
+        "start_date": "04-01-2018",
+        "end_date": "03-31-2019",
+        "intrest": 8.65
+    },
+    {
+        "start_date": "04-01-2019",
+        "end_date": "03-31-2021",
+        "intrest": 8.5
+    },
+    {
+        "start_date": "04-01-2021",
+        "end_date": "03-31-2022",
+        "intrest": 8.1
+    },
+    {
+        "start_date": "04-01-2022",
+        "end_date": "03-31-2024",
+        "intrest": 8.15
+    }
+]

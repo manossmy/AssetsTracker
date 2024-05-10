@@ -1,0 +1,192 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="content-wrapper">
+      <ion-menu-button></ion-menu-button>
+      <ion-label><ion-icon name="home" class="ion-margin-end"
+          routerLink='/user/{{userId}}/investment'></ion-icon>Dashboard</ion-label>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <div class="label-wrapper">
+      <ion-label class="ion-padding-start">Portfolio Details</ion-label>
+      <ion-icon [name]="ionicService.maskAmount ? 'eye' : 'eye-off'" (click)="ionicService.maskAmount = !ionicService.maskAmount; loadData();"></ion-icon>
+    </div>
+    <div id="portfolio-chart">
+      <div class="chart-wrapper" *ngIf="portfolioChartOptions && userDetails?.investment != 0">
+        <apx-chart [series]="portfolioChartOptions.series" [chart]="portfolioChartOptions.chart"
+          [labels]="portfolioChartOptions.labels" [responsive]="portfolioChartOptions.responsive"
+          [plotOptions]="portfolioChartOptions.plotOptions" [dataLabels]="portfolioChartOptions.dataLabels"
+          [legend]="portfolioChartOptions.legend" [colors]="portfolioChartOptions.colors"
+          [stroke]="portfolioChartOptions.stroke" [tooltip]="portfolioChartOptions.tooltip"></apx-chart>
+      </div>
+
+      <div *ngIf="userDetails?.investment == 0" class="nodata-chart-card-container" style="background: #45525b;">
+        <p>No data Found !!</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="statistics-label-wrap">
+      <ion-label class="ion-padding-start">Investment Statistics - [{{activeSilde}}]</ion-label>
+    </div>
+
+    <ion-slides #slider pager="true" [options]="slideOpts" (ionSlideDidChange)='ionSlideDidChange()'>
+      <!-- 1st slide -->
+      <ion-slide>
+        <ion-card id="month-card-container" class="month-card-container statistics-chart-wrapper"
+          style="min-height: 375px; min-width: calc(100% - 32px);">
+          <div class="whole-btn-wrapper">
+            <div class="btn-wrap" style="max-width: 275px;">
+              <ion-buttons>
+                <ion-button (click)="filter.monthly.type = 'CURRENT'; loadInvestmentStatistics('MONTHLY');"
+                  [ngClass]="filter.monthly.type === 'CURRENT' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Current Month</ion-label>
+                </ion-button>
+                <ion-button (click)="filter.monthly.type = 'PREVIOUS'; loadInvestmentStatistics('MONTHLY');"
+                  [ngClass]="filter.monthly.type === 'PREVIOUS' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Last Month</ion-label>
+                </ion-button>
+                <ion-button (click)="filter.monthly.type = 'CUSTOM'; month.showPicker()"
+                  [ngClass]="filter.monthly.type === 'CUSTOM' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Custom</ion-label>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </div>
+
+          <div class="date-time-wrapper" style="display: none;">
+            <!-- <input placeholder="Date Time Range" [selectMode]="'range'" #dateRange [max]="maxDate"
+              [(ngModel)]="filter.monthly.date_range[0]" [owlDateTimeTrigger]="dtRangeMonth"
+              [owlDateTime]="dtRangeMonth" class="owlInput" style="color: var(--common-text-color-B)"
+              (dateTimeChange)="loadInvestmentStatistics('MONTHLY')">
+            <owl-date-time [pickerType]="'calendar'" #dtRangeMonth></owl-date-time> -->
+            <input #month type="month" [(ngModel)]="filter.monthly.selectedMonth" id="month" (change)="loadInvestmentStatistics('MONTHLY')" name="month" value="2023-08" style="display: none;" />
+          </div>
+
+          <div class="monthly-chart-options-chart ion-padding-top"
+            *ngIf="monthlyInvestmentChartOptions && !monthlyInvestmentChartOptions.noDataFound">
+            <apx-chart [series]="monthlyInvestmentChartOptions.series" [chart]="monthlyInvestmentChartOptions.chart"
+              [labels]="monthlyInvestmentChartOptions.labels" [responsive]="monthlyInvestmentChartOptions.responsive"
+              [plotOptions]="monthlyInvestmentChartOptions.plotOptions"
+              [dataLabels]="monthlyInvestmentChartOptions.dataLabels" [legend]="monthlyInvestmentChartOptions.legend"
+              [colors]="monthlyInvestmentChartOptions.colors" [xaxis]="monthlyInvestmentChartOptions.xaxis"
+              [yaxis]="monthlyInvestmentChartOptions.yaxis" [title]="monthlyInvestmentChartOptions.title"
+              [tooltip]="monthlyInvestmentChartOptions.tooltip"></apx-chart>
+          </div>
+
+          <div class="nodata-chart-card-container" *ngIf="monthlyInvestmentChartOptions?.noDataFound">
+            <p>{{monthlyInvestmentChartOptions.title.text}} <br><br> No data Found!!</p>
+          </div>
+        </ion-card>
+      </ion-slide>
+
+      <!-- 2nd slide -->
+      <ion-slide>
+        <ion-card class="month-card-container statistics-chart-wrapper"
+          style="min-height: 375px; min-width: calc(100% - 32px);">
+          <div class="whole-btn-wrapper">
+            <div class="btn-wrap" style="max-width: 248px;">
+              <ion-buttons>
+                <ion-button (click)="filter.yearly.type = 'CURRENT'; loadInvestmentStatistics('YEARLY');"
+                  [ngClass]="filter.yearly.type === 'CURRENT' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Current Year</ion-label>
+                </ion-button>
+                <ion-button (click)="filter.yearly.type = 'PREVIOUS'; loadInvestmentStatistics('YEARLY');"
+                  [ngClass]="filter.yearly.type === 'PREVIOUS' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Last Year</ion-label>
+                </ion-button>
+                <ion-button (click)="filter.yearly.type = 'CUSTOM'; year.showPicker()"
+                  [ngClass]="filter.yearly.type === 'CUSTOM' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Custom</ion-label>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </div>
+
+          <div class="date-time-wrapper" style="display: none;">
+            <!-- <input placeholder="Date Time Range" [selectMode]="'range'" #dateRange [max]="maxDate"
+              [(ngModel)]="filter.yearly.date_range[0]" [owlDateTimeTrigger]="dtRangeYear" [owlDateTime]="dtRangeYear"
+              class="owlInput" style="color: var(--common-text-color-B)"
+              (dateTimeChange)="loadInvestmentStatistics('YEARLY')">
+            <owl-date-time [pickerType]="'calendar'" #dtRangeYear></owl-date-time> -->
+            <input #year type="month" id="year" [(ngModel)]="filter.yearly.selectedYear" (change)="loadInvestmentStatistics('YEARLY')" name="year" value="2023-08" style="display: none;" />
+          </div>
+
+          <div class="monthly-chart-options-chart ion-padding-top"
+            *ngIf="yearlyInvestmentChartOptions  && !yearlyInvestmentChartOptions.noDataFound">
+            <apx-chart [series]="yearlyInvestmentChartOptions.series" [chart]="yearlyInvestmentChartOptions.chart"
+              [labels]="yearlyInvestmentChartOptions.labels" [responsive]="yearlyInvestmentChartOptions.responsive"
+              [plotOptions]="yearlyInvestmentChartOptions.plotOptions"
+              [dataLabels]="yearlyInvestmentChartOptions.dataLabels" [legend]="yearlyInvestmentChartOptions.legend"
+              [colors]="yearlyInvestmentChartOptions.colors" [xaxis]="yearlyInvestmentChartOptions.xaxis"
+              [yaxis]="yearlyInvestmentChartOptions.yaxis" [title]="yearlyInvestmentChartOptions.title"
+              [tooltip]="yearlyInvestmentChartOptions.tooltip"></apx-chart>
+          </div>
+
+          <div class="nodata-chart-card-container" *ngIf="yearlyInvestmentChartOptions?.noDataFound">
+            <p>{{yearlyInvestmentChartOptions.title.text}} <br><br>No data Found!!</p>
+          </div>
+        </ion-card>
+      </ion-slide>
+
+      <!-- 3rd slide -->
+      <ion-slide>
+        <ion-card class="month-card-container statistics-chart-wrapper"
+          style="min-height: 375px; min-width: calc(100% - 32px);">
+          <div class="whole-btn-wrapper">
+            <div class="btn-wrap" style="max-width: 345px;">
+              <ion-buttons>
+                <ion-button (click)="filter.financial.type = 'CURRENT'; loadInvestmentStatistics('FINANCIAL_YEAR');"
+                  [ngClass]="filter.financial.type === 'CURRENT' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Curr. Financial Year</ion-label>
+                </ion-button>
+                <ion-button (click)="filter.financial.type = 'PREVIOUS'; loadInvestmentStatistics('FINANCIAL_YEAR');"
+                  [ngClass]="filter.financial.type === 'PREVIOUS' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Last Financial Year</ion-label>
+                </ion-button>
+                <ion-button (click)="filter.financial.type = 'CUSTOM'; financial.showPicker()"
+                  [ngClass]="filter.financial.type === 'CUSTOM' ? 'selected-highlight-color' : 'selected-normal-color'">
+                  <ion-label>Custom</ion-label>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </div>
+
+          <div class="date-time-wrapper" style="display: none;">
+            <!-- <input placeholder="Date Time Range" [selectMode]="'range'" #dateRange [max]="maxDate"
+              [(ngModel)]="filter.financial.date_range[0]" [owlDateTimeTrigger]="dtRangeFinancial"
+              [owlDateTime]="dtRangeFinancial" class="owlInput" style="color: var(--common-text-color-B)"
+              (dateTimeChange)="loadInvestmentStatistics('FINANCIAL_YEAR')">
+            <owl-date-time [pickerType]="'calendar'" #dtRangeFinancial></owl-date-time> -->
+            <input #financial type="month" id="finYear" name="finYear" [(ngModel)]="filter.financial.selectedYear" (change)="loadInvestmentStatistics('FINANCIAL_YEAR')" value="2023-08" style="display: none;" />
+          </div>
+
+          <div class="monthly-chart-options-chart ion-padding-top"
+            *ngIf="financialInvestmentChartOptions  && !financialInvestmentChartOptions.noDataFound">
+            <apx-chart [series]="financialInvestmentChartOptions.series" [chart]="financialInvestmentChartOptions.chart"
+              [labels]="financialInvestmentChartOptions.labels"
+              [responsive]="financialInvestmentChartOptions.responsive"
+              [plotOptions]="financialInvestmentChartOptions.plotOptions"
+              [dataLabels]="financialInvestmentChartOptions.dataLabels"
+              [legend]="financialInvestmentChartOptions.legend" [colors]="financialInvestmentChartOptions.colors"
+              [xaxis]="financialInvestmentChartOptions.xaxis" [yaxis]="financialInvestmentChartOptions.yaxis"
+              [title]="financialInvestmentChartOptions.title"
+              [tooltip]="financialInvestmentChartOptions.tooltip"></apx-chart>
+          </div>
+
+          <div class="nodata-chart-card-container" *ngIf="financialInvestmentChartOptions?.noDataFound">
+            <p>{{financialInvestmentChartOptions.title.text}} <br><br>No data Found!!</p>
+          </div>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+
+
+
+  </div>
+</ion-content>

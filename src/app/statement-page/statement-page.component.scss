@@ -1,0 +1,398 @@
+.ion-header {
+    height: 200px;
+    background: linear-gradient(90deg, var(--primary-section-bgcolor-left), var(--primary-section-bgcolor-right));
+
+    .header-title-name {
+        height: 24px;
+        overflow: hidden;
+    }
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        padding: 8px 14px 4px 14px;
+        height: 62px;
+
+        ion-icon {
+            font-size: 21px;
+            color: var(--primary-bold-text-color);
+        }
+
+        ion-label {
+            flex: 1;
+            margin: 0px;
+            font-weight: 600;
+            color: var(--primary-bold-text-color);
+        }
+
+        .header-right-content {
+            ion-icon {
+                font-size: 28px;
+                padding-top: 4px;
+                color: var(--primary-bold-text-color);
+            }
+        }
+    }
+
+    .price-content {
+        ion-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            ion-col {
+                text-align: center;
+
+                .total-asset-amount {
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: var(--primary-bold-text-color);
+                }
+
+                .total-txt {
+                    font-size: 12px;
+                    color: var(--primary-normal-text-color);
+                }
+
+                ion-icon {
+                    color: var(--primary-normal-text-color);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .split-amount-profit {
+        #vtcl-line {
+            border-right: 2px solid var(--primary-normal-text-color);
+        }
+
+        .split-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .amount {
+                font-weight: 600;
+                font-size: 14px;
+                color: var(--primary-bold-text-color);
+            }
+
+            .sub-text {
+                font-size: 12px;
+                color: var(--primary-normal-text-color);
+            }
+        }
+    }
+}
+
+
+ion-content {
+    --background: var(--secondary-section-bgcolor);
+
+    .content-head {
+        color: var(--secondary-bold-text-color);
+    }
+
+    .card-container {
+        padding: 8px 0px;
+        background-color: var(--secondary-card-bg-color);
+
+        .line {
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--secondary-card-line-color);
+        }
+
+        .user-icon {
+            font-size: 30px;
+            color: var(--secondary-bold-text-color);
+        }
+
+        ion-chip {
+            background: none;
+
+            ion-label {
+                color: var(--secondary-bold-text-color);
+            }
+        }
+
+        .delete-icon-wrap {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            font-size: 20px;
+            color: var(--secondary-bold-text-color);
+
+            .delete-icon {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .card-content-container {
+        margin: 6px 14px;
+
+        .title {
+            color: var(--secondary-normal-text-color)
+        }
+
+        ion-label {
+            color: var(--secondary-bold-text-color);
+        }
+
+        .left-content {
+            text-align: start;
+        }
+
+        .right-content {
+            text-align: end;
+        }
+    }
+}
+
+.ion-footer {
+    ion-toolbar {
+        --background: var(--footer-section-bgcolor);
+
+        .buttons-wrap {
+            display: flex;
+        }
+
+        ion-button {
+            flex: 1;
+            margin: 0px;
+            --box-shadow: none;
+            text-transform: none;
+            --background: linear-gradient(90deg, var(--footer-button-bgcolor-right), var(--footer-button-bgcolor-left));
+            --color: var(--footer-button-text-color);
+
+            ion-label {
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+
+// popup modal
+.pop-up-modal-header {
+    ion-toolbar {
+
+        // --background: var(--bg-primary-color);
+        ion-label {
+            font-size: 16px;
+            color: var(--ion-modal-topheading-text-color);
+        }
+
+        ion-icon {
+            font-size: 22px;
+            color: var(--ion-modal-header-text-color);
+        }
+    }
+}
+
+ion-modal {
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+    background: var(--ion-modal-popup-bg-color);
+    opacity: 1;
+}
+
+ion-modal .header-toolbar {
+    --background: linear-gradient(90deg, var(--ion-modal-header-bgcolor-left), var(--ion-modal-header-bgcolor-right));
+    --color: var(--ion-modal-header-text-color);
+}
+
+.pop-up-modal-content {
+    --background: var(--ion-modal-content-bgcolor);
+
+    .modal-dropdown,
+    .modal-txtbx {
+        --background: var(--ion-modal-content-textbox-bgcolor);
+        border-radius: 3px;
+        --highlight-background: transparent;
+
+        ion-label {
+            --color: var(--ion-modal-header-text-color);
+        }
+    }
+
+    .form-page-wrapper {
+        .date-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input {
+            width: 100%;
+            border: none;
+            height: 102%;
+            background: var(--ion-modal-bg-color);
+            color: var(--common-text-color-B);
+        }
+
+        ion-item {
+            margin: 16px 0px;
+        }
+
+        ion-label {
+            color: var(--ion-modal-header-text-color);
+        }
+    }
+
+    .ion-card-mf-details {
+        padding: 0px 16px;
+        background: rgba(255, 255, 255, 0.5019607843);
+
+        .ttl {
+            color: var(--secondary-normal-text-color);            
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .val {
+            color: var(--secondary-bold-text-color);
+        }
+    }
+}
+
+.popup-modal-ion-footer {
+    ion-toolbar {
+        // --background: var(--secondary-section-bgcolor);
+        --background: var(--ion-modal-content-bgcolor);
+
+        ion-title {
+            padding: 0px;
+        }
+    }
+
+    ion-buttons {
+        display: flex;
+        --background: var(--secondary-section-bgcolor);
+
+        ion-button {
+            flex: 1;
+            --box-shadow: none;
+            text-transform: none;
+            
+            ion-label {
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+.national-pension-scheme {
+    ion-card {
+        background: var(--secondary-card-bg-color);
+
+        .header-row {
+            border-bottom: 2px solid var(--secondary-card-line-color);
+            padding: 0px 0px 8px 6px;
+
+            ion-col {
+                padding: 0px
+            }
+        }
+
+        .scheme-title-head {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--secondary-normal-text-color);
+        }
+
+        .scheme-subtitle-head {
+            font-size: 12px;
+            color: var(--secondary-normal-text-color);
+        }
+
+        .scheme-values {
+            font-size: 12px;
+            color: var(--secondary-bold-text-color);
+        }
+    }
+}
+
+.NPS-container-wrap {
+    margin: 10px 10px;
+}
+
+.nps-scheme-collapse {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--secondary-section-bgcolor);
+    border-radius: 5px;
+
+    .viewmore-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
+
+        .txt {
+            font-size: 14px;
+            color: var(--secondary-normal-text-color);
+        }
+
+        .icon-wrap {
+            margin: 4px 0px 0px 6px;
+        }
+    }
+
+    ion-icon {
+        color: var(--secondary-normal-text-color);
+    }
+}
+
+.hide-show-scheme-dropdown-wrap {
+    .dropdown-card {
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, var(--primary-section-bgcolor-left), var(--primary-section-bgcolor-right));
+        ;
+    }
+
+    .viewmore-open-heading-row,
+    .viewmore-open-subheading-row {
+        border-bottom: 1px solid var(--secondary-normal-text-color);
+        padding: 5px 0px;
+    }
+
+    .last-row {
+        padding-bottom: 5px;
+    }
+
+    .frst-lbl {
+        padding-left: 10px;
+    }
+
+    .scheme-title-head {
+        font-size: 14px;
+        font-weight: 600;
+        color: #272323;
+    }
+
+    .scheme-subtitle-head {
+        font-size: 12px;
+        color: var(--secondary-normal-text-color);
+    }
+
+    .scheme-values {
+        font-size: 12px;
+        color: var(--secondary-bold-text-color);
+    }
+
+    .scheme-prof-loss-values {
+        font-size: 12px;
+    }
+}
+
+.template-download-icon {
+    font-size: 24px;
+    float: right;
+    margin-right: 8px;
+    color: var(--secondary-bold-text-color);
+}

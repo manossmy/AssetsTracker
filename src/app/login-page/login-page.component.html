@@ -1,0 +1,112 @@
+<ion-content>
+  <div class="img-transition-wrapper">
+    <ion-img class="img-transition" src="../../assets/icon/icn.png"></ion-img>
+  </div>
+
+  <div *ngIf="view == 'VALIDATING'">
+  </div>
+
+  <div class="chooseSigninOption" *ngIf="isLoginWithAutoBackup">
+    <ion-card>
+      <div class="content-wrapper">
+        <ion-button fill="outline" expand="block" shape="round" class="signup-backup-btn" (click)="isLoginWithAutoBackup = false; view = 'REGISTER'">
+          <ion-label>Signup</ion-label>
+        </ion-button>
+        <ion-button fill="outline" expand="block" shape="round" (click)="restoreFileUpload.click()"
+          class="signup-backup-btn">
+          <ion-label>Continue with Auto Backup</ion-label>
+        </ion-button>
+        <input type="file" #restoreFileUpload name="upload_restore_file" (change)="restoreBackup($event)" hidden />
+      </div>
+    </ion-card>
+  </div>
+
+  <form (ngSubmit)="login()" class="login-form">
+    <div *ngIf="!isLoginWithAutoBackup && view == 'LOGIN'" class="pin-nr-only">
+      <ion-card class="ion-card-content">
+        <ion-grid style="text-align: center;">
+          <ion-row>
+            <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+              offset-md="4" offset-lg="4" offset-xl="4">
+              <div>
+                <ion-label class="pin-label">Enter 6 Digit Login PIN</ion-label>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+              offset-md="4" offset-lg="4" offset-xl="4">
+              <div class="pin-nr-wrapper">
+                <ion-input class="pin-number" type="password" [(ngModel)]="userPin" [ngModelOptions]="{standalone: true}" required maxLength="6">
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+            offset-md="4" offset-lg="4" offset-xl="4">
+            <ion-button type="submit" expand="block" class="sign-in-btn">Sign In</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </form>
+
+  <form (ngSubmit)="signup()" class="signup-form">
+    <div  *ngIf="!isLoginWithAutoBackup && view == 'REGISTER'">
+      <ion-card class="ion-card-content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+              offset-md="4" offset-lg="4" offset-xl="4">
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">Name</ion-label>
+                <ion-input type="text" name="name" [(ngModel)]="userDetails.name"></ion-input>
+              </ion-item>
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">Email</ion-label>
+                <ion-input type="email" name="email" [(ngModel)]="userDetails.email"></ion-input>
+              </ion-item>
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">Phone Number</ion-label>
+                <ion-input type="text" name="email" [(ngModel)]="userDetails.phone_number"></ion-input>
+              </ion-item>
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">PAN</ion-label>
+                <ion-input type="text" name="pan" [(ngModel)]="userDetails.pan"></ion-input>
+              </ion-item>
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">Family Name</ion-label>
+                <ion-input type="text" name="family_name" [(ngModel)]="userDetails.family_name"></ion-input>
+              </ion-item>
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">Create Password</ion-label>
+                <ion-input type="password" name="pin" maxlength="6" [(ngModel)]="userDetails.password"></ion-input>
+              </ion-item>
+              <ion-item fill="outline" class="ion-margin-bottom textbox">
+                <ion-label position="floating">Confirm Password</ion-label>
+                <ion-input type="password" name="confirmPin" maxlength="6"
+                  [(ngModel)]="userDetails.confirmPassword"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+              offset-md="4" offset-lg="4" offset-xl="4">
+              <ion-button type="submit" expand="block" class="signup-btn">Signup User</ion-button>
+            </ion-col>
+            <ion-col size-xs="11" size-sm="11" size-md="4" size-lg="4" size-xl="4" offset-xs="0.5" offset-sm="0.5"
+              offset-md="4" offset-lg="4" offset-xl="4">
+              <ion-button expand="block" fill="clear" class="cancel-btn" (click)="isLoginWithAutoBackup = true; view = 'VALIDATING'; userDetails = {};">
+                <ion-label>Back</ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+  </form>
+</ion-content>

@@ -1,0 +1,72 @@
+[
+    {
+        "start_date": "03-01-2001",
+        "end_date": "02-28-2002",
+        "intrest": 9.5
+    },
+    {
+        "start_date": "03-01-2002",
+        "end_date": "02-28-2003",
+        "intrest": 9
+    },
+    {
+        "start_date": "03-01-2003",
+        "end_date": "11-30-2011",
+        "intrest": 8
+    },
+    {
+        "start_date": "12-01-2011",
+        "end_date": "03-31-2012",
+        "intrest": 8.6
+    },
+    {
+        "start_date": "04-01-2012",
+        "end_date": "03-31-2013",
+        "intrest": 8.8
+    },
+    {
+        "start_date": "04-01-2013",
+        "end_date": "03-31-2016",
+        "intrest": 8.7
+    },
+    {
+        "start_date": "04-01-2016",
+        "end_date": "09-30-2016",
+        "intrest": 8.1
+    },
+    {
+        "start_date": "10-01-2016",
+        "end_date": "03-31-2017",
+        "intrest": 8
+    },
+    {
+        "start_date": "04-01-2017",
+        "end_date": "06-30-2017",
+        "intrest": 7.9
+    },
+    {
+        "start_date": "07-01-2017",
+        "end_date": "12-31-2017",
+        "intrest": 7.8
+    },
+    {
+        "start_date": "01-01-2018",
+        "end_date": "09-30-2018",
+        "intrest": 7.6
+    },
+    {
+        "start_date": "10-01-2018",
+        "end_date": "06-30-2019",
+        "intrest": 8
+    },
+    {
+        "start_date": "07-01-2019",
+        "end_date": "03-31-2020",
+        "intrest": 7.9
+    },
+    {
+        "start_date": "04-01-2020",
+        "end_date": "03-31-2024",
+        "intrest": 7.1
+    }
+]

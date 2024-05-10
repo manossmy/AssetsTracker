@@ -1,0 +1,585 @@
+<ion-header class="ion-header ion-no-border">
+  <div class="header-content">
+    <ion-icon name="arrow-back-sharp" class="ion-margin-end"
+      [routerLink]="['/user/'+ userId + '/investment/' + investmentId + '/sub-type']" routerDirection="back"></ion-icon>
+    <ion-label class="header-title-name"> {{ investmentSubtype.name }} </ion-label>
+    <div class="header-right-content">
+      <ion-icon name="log-out-outline" routerLink="/login"></ion-icon>
+    </div>
+  </div>
+
+  <div class="price-content ion-margin-bottom">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" class="ion-no-padding">
+          <ion-label class="total-asset-amount">₹ {{ (investment.type == 'LENT' ? investmentSubtype.investment : investmentSubtype.current_value) | currencyFormat: '.0-0' | maskAmount: ionicService.maskAmount }} </ion-label>
+          <ion-icon [name]="ionicService.maskAmount ? 'eye' : 'eye-off'" (click)="ionicService.maskAmount = !ionicService.maskAmount"></ion-icon>
+          <ion-spinner class="profit-calculating" *ngIf="profitService.isCalculationInProgress" name="crescent" color="light"></ion-spinner>
+        </ion-col>
+        <ion-col size="12" class="ion-no-padding">
+          <ion-label class="total-txt">{{investment.type == 'LENT' ? 'Total Amount Issued': 'Total Portfolio Value'}}</ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="split-amount-profit">
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="6" class="ion-no-padding split-column" id="vtcl-line">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="sub-text">{{investment.type == 'LENT' ? 'Return': 'Invested'}}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="amount">₹ {{ (investment.type == 'LENT' ? investmentSubtype.return_amount : investmentSubtype.investment) | currencyFormat: '.0-0' | maskAmount: ionicService.maskAmount }} </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="6" class="ion-no-padding split-column" *ngIf="investment.type != 'CF'">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="sub-text">{{investment.type == 'LENT' ? 'Balance' : 'Profit (XIRR)'}}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="investment.type == 'LENT'">
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="amount">₹ {{ ((investmentSubtype.investment - investmentSubtype.return_amount) | currencyFormat: '.0-0') || '00' | maskAmount: ionicService.maskAmount }} </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="prof-loss" *ngIf="investment.type != 'LENT'">
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label
+                [ngClass]="(investmentSubtype.current_value - investmentSubtype.investment) > 0 ? 'primary-profit-color' : 'primary-loss-color'">
+                ₹
+                {{ (investmentSubtype.current_value - investmentSubtype.investment) | currencyFormat: '.0-0' | maskAmount: ionicService.maskAmount }} ({{
+                (investmentSubtype.xirr | currencyFormat: '.2-2' | maskAmount: ionicService.maskAmount) + '%' || 0 }})</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="6" class="ion-no-padding split-column" *ngIf="investment.type == 'CF'">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label class="sub-text">Profit</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="prof-loss">
+            <ion-col size="12" class="ion-no-padding">
+              <ion-label [ngClass]="(investmentSubtype.current_value - investmentSubtype.investment) > 0 ? 'secondary-profit-color' : 'secondary-loss-color'">
+                ₹{{(investmentSubtype.current_value - investmentSubtype.investment) | currencyFormat: '.0-0' | maskAmount: ionicService.maskAmount }}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-header>
+
+<ion-content>
+  <p class="content-head ion-margin-start">Active Protfolio Orders</p>
+  <div>
+    <ion-card class="card-container" *ngFor="let list of statementList">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="line">
+          <ion-col size="10" class="ion-no-padding">
+            <ion-chip class="ion-no-margin">
+              <ion-icon name="person-circle-sharp" class="user-icon"></ion-icon>
+              <ion-label> {{ list.ir_date | date: 'dd-MMM-y' }} </ion-label>
+            </ion-chip>
+          </ion-col>
+          <ion-col size="2" class="ion-no-padding delete-icon-wrap"
+            *ngIf="!((investment.type == 'SGB' && list.type == 'D') || (investment.type == 'BANK' && investmentSubtype.category == 'Fixed Deposit') || (investment.type == 'PO' && investmentSubtype.category == 'Term Deposit'))">
+            <ion-icon name="trash-sharp" class="delete-icon" (click)="confirmDelete(list)"></ion-icon>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="card-content-container" *ngFor="let field of fieldDetails[investment.type]">
+          <ion-col class="left-content" *ngIf="!field.isCustomField || (investment.type == 'SM' && list.type == 'D')">
+            <ion-label class="title">{{field.name}}</ion-label>
+          </ion-col>
+          <ion-col class="right-content">
+            <ion-label *ngIf="!field.isAmount">{{ list[field.attr] }}</ion-label>
+            <ion-label *ngIf="field.isAmount">₹ {{ list[field.attr] | currencyFormat: field.precision | maskAmount: ionicService.maskAmount }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <!--  -->
+        <div class="NPS-container-wrap">
+          <!-- NPS container -->
+          <ion-row class="ion-margin-top" class="ion-margin-top" *ngIf="investment.type == 'NPS' && !list.showContent">
+            <ion-col button class="ion-no-padding nps-scheme-collapse" *ngIf="investment.type == 'NPS'"
+              (click)="list.showContent = true">
+              <div *ngIf="!list.showContent" class="viewmore-wrapper">
+                <p class="ion-no-margin txt">View more</p>
+                <p class="ion-no-margin icon-wrap"><ion-icon name="chevron-down-outline"></ion-icon></p>
+              </div>
+            </ion-col>
+          </ion-row>
+          <!-- scheme show = click down -->
+          <div *ngIf="list.showContent" class="hide-show-scheme-dropdown-wrap">
+            <ion-card class="ion-no-margin dropdown-card">
+              <ion-row>
+                <ion-col>
+                  <ion-row class="viewmore-open-heading-row">
+                    <ion-col>
+                      <ion-label class="scheme-title-head frst-lbl"> Scheme </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-title-head"> Scheme E </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-title-head"> Scheme C </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-title-head"> Scheme G </ion-label>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="viewmore-open-subheading-row">
+                    <ion-col>
+                      <ion-label class="scheme-subtitle-head frst-lbl"> Allocation (%) </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values"> {{list.allocation_e }}% </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values"> {{list.allocation_c }}% </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values"> {{list.allocation_g }}% </ion-label>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="viewmore-open-subheading-row">
+                    <ion-col>
+                      <ion-label class="scheme-subtitle-head frst-lbl"> NAV </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">{{list.amount_per_quantity_e | currencyFormat: '.2-2'}}</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values"> {{list.amount_per_quantity_c | currencyFormat: '.2-2'}} </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values"> {{list.amount_per_quantity_g | currencyFormat: '.2-2'}} </ion-label>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="viewmore-open-subheading-row">
+                    <ion-col>
+                      <ion-label class="scheme-subtitle-head frst-lbl"> Units </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">{{list.quantity_e | currencyFormat: '.2-2'}}
+                      </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">{{list.quantity_c | currencyFormat: '.2-2'}}
+                      </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">{{list.quantity_g | currencyFormat: '.2-2'}}
+                      </ion-label>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="last-row">
+                    <ion-col>
+                      <ion-label class="scheme-subtitle-head frst-lbl"> Amount </ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">₹ {{ (list.type != 'RB-R' ? list.amount_e * -1 : list.amount_e) |
+                        currencyFormat: '.2-2' | maskAmount: ionicService.maskAmount}}</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">₹ {{ (list.type != 'RB-R' ? list.amount_c * -1 : list.amount_c) |
+                        currencyFormat: '.2-2' | maskAmount: ionicService.maskAmount}}</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label class="scheme-values">₹ {{ (list.type != 'RB-R' ? list.amount_g * -1 : list.amount_g) |
+                        currencyFormat: '.2-2' | maskAmount: ionicService.maskAmount}}</ion-label>
+                    </ion-col>
+                  </ion-row>
+
+
+                </ion-col>
+              </ion-row>
+            </ion-card>
+          </div>
+
+          <ion-row *ngIf="investment.type == 'NPS' && list.showContent">
+            <ion-col button class="ion-no-padding nps-scheme-collapse" *ngIf="investment.type == 'NPS'"
+              (click)="list.showContent = false">
+              <div *ngIf="list.showContent" class="viewmore-wrapper">
+                <p class="ion-no-margin txt">View less</p>
+                <p class="ion-no-margin icon-wrap"><ion-icon name="chevron-up-outline"></ion-icon></p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <!--  -->
+      </ion-grid>
+
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-footer"
+  *ngIf="!((investment.type == 'BANK' && investmentSubtype.category == 'Fixed Deposit') || (investment.type == 'PO' && investmentSubtype.category == 'Term Deposit'))">
+  <ion-toolbar>
+    <ion-title>
+
+      <ion-button expand="block" id="open-statement-modal" *ngIf="['MF', 'LENT'].indexOf(investment.type) != -1" (click)="initAddStatement()">
+        <ion-label>Add Statement</ion-label>
+      </ion-button>
+
+      <ion-buttons class="buttons-wrap"
+        *ngIf="['NPS', 'SGB', 'BANK', 'PPF', 'LIC', 'SM', 'FINANCE', 'EPF', 'CF'].indexOf(investment.type) != -1">
+        <ion-button style="margin-right: 16px" id="upload-statement-modal" (click)="initAddStatement(true)">
+          <ion-label>Upload CSV</ion-label>
+        </ion-button>
+        <ion-button expand="block" style="margin-left: 16px" id="open-statement-modal" (click)="initAddStatement()">
+          <ion-label>Add Statement</ion-label>
+        </ion-button>
+      </ion-buttons>
+
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- ion-modal -->
+<ion-modal #modal trigger="open-statement-modal" *ngIf="investment.type">
+  <ng-template>
+    <ion-header class="pop-up-modal-header">
+      <ion-toolbar class="header-toolbar">
+        <ion-title>
+          <ion-label>Statement Type</ion-label>
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="pop-up-modal-content">
+      <div class="form-page-wrapper ion-margin">
+
+        <div>
+          <ion-label>Type</ion-label>
+          <ion-item line="none" fill="outline" class="modal-dropdown">
+            <ion-select interface="action-sheet" placeholder="--Select Type--" [(ngModel)]="statement.type"
+              (ionBlur)="loadData()">
+              <ion-select-option value="I" *ngIf="['FINANCE'].indexOf(investment.type) == -1">{{investment.type == 'LENT' ? 'Issued': 'Buy'}} [I]</ion-select-option>
+              <ion-select-option value="R" *ngIf="['MF', 'SGB'].indexOf(investment.type) != -1">Sell [R]</ion-select-option>
+              <ion-select-option value="R" *ngIf="['CF', 'LENT'].indexOf(investment.type) != -1">Return [R]</ion-select-option>
+              <ion-select-option value="D" *ngIf="['SM'].indexOf(investment.type) != -1">Dividend [D]</ion-select-option>
+              <ion-select-option value="R"
+                *ngIf="['FINANCE'].indexOf(investment.type) != -1">Intrest [R]</ion-select-option>
+                <ion-select-option value="RB-R" *ngIf="investment.type == 'NPS'">Rebalancing Assets (Sell) [RB-R]</ion-select-option>
+                <ion-select-option value="RB-I" *ngIf="investment.type == 'NPS'">Rebalancing Assets (Buy) [RB-I]</ion-select-option>
+                <ion-select-option value="C" *ngIf="investment.type == 'NPS'">Service Charges [C]</ion-select-option>
+              </ion-select>
+          </ion-item>
+        </div>
+
+        <div class="date-wrap">
+          <ion-label>Date</ion-label>
+          <ion-item line="none" class="modal-txtbx">
+            <input type="date" class="input" [(ngModel)]="statement.ir_date" (ngModelChange)="loadData()" />
+          </ion-item>
+        </div>
+
+        <div *ngIf="['SGB', 'EPF', 'NPS'].indexOf(investment.type) == -1">
+          <ion-label>{{investment.type == 'LIC' ? 'Amount (Excluding Tax)' : 'Amount'}}</ion-label>
+          <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+            <ion-input type="number" [(ngModel)]="statement.amount" (ionBlur)="loadData()"></ion-input>
+          </ion-item>
+        </div>
+
+        <div *ngIf="investment.type == 'NPS' && ['RB-R', 'RB-I'].indexOf(statement.type) == -1">
+          <ion-label>Amount</ion-label>
+          <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+            <ion-input type="number" [(ngModel)]="statement.amount" (ionBlur)="(statement.type && statement.ir_date && statement.amount) ? loadNpsData(statement) : null"></ion-input>
+          </ion-item>
+        </div>
+
+        <div *ngIf="investment.type == 'NPS' && ['RB-R', 'RB-I'].indexOf(statement.type) != -1">
+          <div>
+            <ion-label>Rebalancing Asset - E</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.rebalancing_e"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label>Rebalancing Asset - C</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.rebalancing_c"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label>Rebalancing Asset - G</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.rebalancing_g"></ion-input>
+            </ion-item>
+          </div>
+        </div>
+
+        <div *ngIf="investment.type == 'NPS' && ['C'].indexOf(statement.type) != -1">
+          <ion-row>
+            <ion-col>
+              <ion-label>Amount - E</ion-label>
+              <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+                <ion-input type="number" [(ngModel)]="statement.amount_e"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-label>Amount - C</ion-label>
+              <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+                <ion-input type="number" [(ngModel)]="statement.amount_c"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-label>Amount - G</ion-label>
+              <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+                <ion-input type="number" [(ngModel)]="statement.amount_g"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </div>
+
+
+        <div *ngIf="investment.type == 'SM' && statement.type == 'D'">
+          <ion-label>Share Name</ion-label>
+          <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+            <ion-input type="text" [(ngModel)]="statement.description" (ionFocus)="showSuggestions = true"
+              (ionBlur)="showSuggestions = false"></ion-input>
+          </ion-item>
+          <ion-list *ngIf="showSuggestions">
+            <ion-item *ngFor="let details of shareNameList | filter: {shareName: statement.description}"
+              (click)="statement.description = details.shareName" style="margin: 0px;">
+              {{details.shareName}}
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Mutual fund -->
+        <div class="mutual-fund" *ngIf="investment.type == 'MF'">
+          <div>
+            <ion-label>Stamp Duty (0.005%)</ion-label>
+            <ion-item line="none" class="modal-txtbx">
+              <ion-input type="text" [(ngModel)]="statement.additional_charges"></ion-input>
+            </ion-item>
+          </div>
+
+          <div>
+            <ion-label>NAV</ion-label>
+            <ion-item line="none" class="modal-txtbx">
+              <ion-input type="text" [(ngModel)]="statement.amount_per_quantity"></ion-input>
+            </ion-item>
+          </div>
+
+          <div>
+            <ion-label>Units</ion-label>
+            <ion-item line="none" class="modal-txtbx">
+              <ion-input type="text" [(ngModel)]="statement.quantity"></ion-input>
+            </ion-item>
+          </div>
+        </div>
+
+        <!-- NPS -->
+        <div class="national-pension-scheme" *ngIf="investment.type == 'NPS' && statement.allocation_e">
+          <ion-card class="ion-no-margin">
+            <ion-row>
+              <ion-col>
+                <ion-row class="header-row">
+                  <ion-col>
+                    <ion-label class="scheme-title-head"> Scheme </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-title-head"> Scheme E </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-title-head"> Scheme C </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-title-head"> Scheme G </ion-label>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-label class="scheme-subtitle-head"> Allocation </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values"> {{statement.allocation_e + '%'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values"> {{statement.allocation_c + '%'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values"> {{statement.allocation_g + '%'}} </ion-label>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-label class="scheme-subtitle-head"> {{statement.type == 'C' ? 'Service Charges' : 'Inversement'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">₹ {{statement.amount_e | currencyFormat: '.0-0'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">₹ {{statement.amount_c | currencyFormat: '.0-0'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">₹ {{statement.amount_g | currencyFormat: '.0-0'}} </ion-label>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-label class="scheme-subtitle-head"> NAV </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">{{statement.amount_per_quantity_e | currencyFormat: '.2-2'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">{{statement.amount_per_quantity_c | currencyFormat: '.2-2'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">{{statement.amount_per_quantity_g | currencyFormat: '.2-2'}} </ion-label>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-label class="scheme-subtitle-head"> Units </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">{{statement.type == 'C' ? '-' : ''}}{{statement.quantity_e | currencyFormat: '.2-2'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">{{statement.type == 'C' ? '-' : ''}}{{statement.quantity_c | currencyFormat: '.2-2'}} </ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label class="scheme-values">{{statement.type == 'C' ? '-' : ''}}{{statement.quantity_g | currencyFormat: '.2-2'}} </ion-label>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </div>
+
+        <!-- SGB -->
+        <div *ngIf="investment.type == 'SGB'">
+
+          <div>
+            <ion-label>No. of Gram</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.quantity" (ionBlur)="loadData()"></ion-input>
+            </ion-item>
+          </div>
+
+          <div>
+            <ion-label>Amount Per Gram</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.amount_per_quantity" (ionBlur)="loadData()"></ion-input>
+            </ion-item>
+          </div>
+
+          <div>
+            <ion-label>Additional Charges</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.additional_charges" (ionBlur)="loadData()"></ion-input>
+            </ion-item>
+          </div>
+        </div>
+
+        <!-- EPF -->
+        <div *ngIf="investment.type == 'EPF'">
+          <div>
+            <ion-label>Employee Share</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.employee_share"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label>Employer Share</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.employer_share"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label>Pension</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.pension"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label>Voluntary Provident Fund</ion-label>
+            <ion-item line="none" class="ion-margin-bottom modal-txtbx">
+              <ion-input type="number" [(ngModel)]="statement.vpf"></ion-input>
+            </ion-item>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+
+    <ion-footer class="popup-modal-ion-footer">
+      <ion-toolbar>
+        <ion-title>
+          <ion-buttons class="ion-margin-horizontal">
+            <ion-button (click)="cancelModalDismiss()" style="margin-right: 16px" class="secondary-cancel-button">
+              <ion-label>Cancel</ion-label>
+            </ion-button>
+            <ion-button type="submit" (click)="addStatement()" expand="block" class="primary-success-button">
+              <ion-label>Add Statement</ion-label>
+            </ion-button>
+          </ion-buttons>
+        </ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
+
+<ion-modal #uploadModal>
+  <ng-template>
+    <ion-header class="pop-up-modal-header">
+      <ion-toolbar class="header-toolbar">
+        <ion-title>
+          <ion-label>Upload Statement</ion-label>
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="pop-up-modal-content">
+      <div class="form-page-wrapper ion-margin">
+        <div class="ion-margin-top">
+          <ion-label style="color: var(--common-text-color-W)">Upload CSV</ion-label>
+          <ion-icon name="cloud-download-outline" class="template-download-icon"
+            (click)="downloadTemplate()"></ion-icon>
+          <ion-item fill="outline" class="ion-margin-vertical modal-txtbx">
+            <ion-input type="file" placeholder="Upload a file" name="upload_file"
+              (change)="onFileChange($event)"></ion-input>
+          </ion-item>
+        </div>
+        <div class="ion-margin-top">
+          <ion-checkbox [(ngModel)]="uploadDetails.override"></ion-checkbox>
+          <ion-label style="color: var(--common-text-color-W); position: absolute; padding: 3px 12px;">Override Existing
+            Statement</ion-label>
+        </div>
+      </div>
+    </ion-content>
+
+    <ion-footer class="popup-modal-ion-footer">
+      <ion-toolbar>
+        <ion-title>
+          <ion-buttons class="ion-margin-horizontal">
+            <ion-button (click)="cancelModalDismiss()" style="margin-right: 16px" class="secondary-cancel-button">
+              <ion-label>Cancel</ion-label>
+            </ion-button>
+            <ion-button type="submit" (click)="uploadStatement()" expand="block" class="primary-success-button">
+              <ion-label>Upload Statement</ion-label>
+            </ion-button>
+          </ion-buttons>
+        </ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
+<!--  -->
